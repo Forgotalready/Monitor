@@ -12,7 +12,7 @@ void Monitor::send()
     pthread_mutex_lock(&mutex);
 
     puts("Sender send signal");
-    signal_sent = 1;
+    signal_sent.store(1);
     pthread_cond_signal(&condvar);
 
     pthread_mutex_unlock(&mutex);
@@ -22,14 +22,14 @@ void Monitor::consume()
 {
     pthread_mutex_lock(&mutex);
     
-    while(!signal_sent)
+    while(!(signal_sent.load()))
     {
         pthread_cond_wait(&condvar, &mutex);
     }
 
     puts("Consumer recive signal");
 
-    signal_sent = 0;
+    signal_sent.store(0);
 
     pthread_mutex_unlock(&mutex);
 }
