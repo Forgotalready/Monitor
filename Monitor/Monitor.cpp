@@ -12,6 +12,13 @@ void Monitor::send()
     pthread_mutex_lock(&mutex);
 
     puts("Sender send signal");
+
+    if(signal_sent.load())
+    {
+        pthread_mutex_unlock(&mutex);
+        return;
+    }
+
     signal_sent.store(1);
     pthread_cond_signal(&condvar);
 
