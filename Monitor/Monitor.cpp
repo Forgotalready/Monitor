@@ -1,10 +1,9 @@
 #include "Monitor.h"
 
 Monitor::Monitor()
+    : signal_sent(0), condvar(PTHREAD_COND_INITIALIZER)
 {
-    signal_sent = 0;
     pthread_mutex_init(&mutex, NULL);
-    condvar = PTHREAD_COND_INITIALIZER;
 }
 
 void Monitor::send()
